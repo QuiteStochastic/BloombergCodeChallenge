@@ -26,6 +26,7 @@ public class Buyer extends Thread{
 
             try {
 
+
                 int index = 0;
                 int count = 0;
                 String []names = companyTickers.keySet().toArray(new String[companyTickers.size()]);
@@ -33,7 +34,7 @@ public class Buyer extends Thread{
                 int END = names.length-1;
                 Random random = new Random();
                 int rand = getRandomInteger(START, END, random);
-                System.out.println("random number " + rand + "length " +names.length);
+                System.out.println("buyer random number " + rand + "length " +names.length);
                 String s = ticker;
                 if(names.length > 0)
                      s =  names[rand];
@@ -67,7 +68,7 @@ public class Buyer extends Thread{
 
 
                 double priceToBuy = bidticker[index].lowAsk;
-                int sharesToBuy = (int) Math.round(0.2 * cash);
+                int sharesToBuy = (int) Math.round(0.1 * cash);
 
                 System.out.println("To bid on "+ticker + " shares: " + sharesToBuy);
                 System.out.println(ExchangeAPI.exchangeCommand("BID " + ticker + " " + priceToBuy + " " + sharesToBuy));
