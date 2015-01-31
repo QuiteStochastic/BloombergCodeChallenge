@@ -1,3 +1,5 @@
+import org.omg.PortableServer.THREAD_POLICY_ID;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -75,9 +77,20 @@ public class Trader {
         }
 
 
+
+        RelativeMonitor monitor=new RelativeMonitor(companyTickers);
+
+        HashMap<String, TradingThread> traders= new HashMap<String, TradingThread>();
+        for(String s: allCompanyTickerNames){
+            traders.put(s,new TradingThread(s, companyTickers.get(s),monitor));
+            traders.get(s).start();
+        }
+
+/*
         while(true){
 
             AvgBidAsk testticker[]=companyTickers.get("AAPL").ticker;
+
 
             for(int i=0;i<testticker.length;i++){
 
@@ -86,13 +99,16 @@ public class Trader {
 
             System.out.println("\n\n");
 
+
+
+
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
 
-        }
+        }*/
 
     }
 
