@@ -60,24 +60,37 @@ public class Trader {
     public static void main(String[] args) {
 
 
-        HashMap<String, Ticker> companyTickers = new HashMap<String, Ticker>();
-        for (String s : allCompanyTickerNames) {
-            companyTickers.put(s, new Ticker(s));
-            companyTickers.get(s).start();
-        }
-
-
         try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
+            String cash = ExchangeAPI.exchangeCommand("MY_CASH");
+            String[] cashArray = cash.split(" ");
+            double cashDouble = Double.parseDouble(cashArray[1]);
+
+            HashMap<String, Ticker> companyTickers = new HashMap<String, Ticker>();
+            for (String s : allCompanyTickerNames) {
+                companyTickers.put(s, new Ticker(s));
+                companyTickers.get(s).start();
+            }
+
+
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            Buyer buyer=new Buyer(holdings,companyTickers, cashDouble);
+            buyer.start();
+
+            Seller seller=new Seller(holdings,companyTickers, cashDouble);
+            seller.start();
+
+        } catch (IOException e) {
+
+
             e.printStackTrace();
         }
 
-        Buyer buyer=new Buyer(holdings,companyTickers);
-        buyer.start();
 
-        Seller seller=new Seller(holdings,companyTickers);
-        seller.start();
 
     }
 }

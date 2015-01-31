@@ -1,17 +1,19 @@
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 
 public class Buyer extends Thread{
 
     HashMap<String, ArrayList<Double>> holdings;
     HashMap<String, Ticker> companyTickers = new HashMap<String, Ticker>();
+    double cash;
 
-
-    public Buyer(HashMap<String, ArrayList<Double>> holdings, HashMap<String, Ticker> companyTickers){
+    public Buyer(HashMap<String, ArrayList<Double>> holdings, HashMap<String, Ticker> companyTickers, double c){
 
         this.holdings=holdings;
         this.companyTickers=companyTickers;
+        cash = c;
     }
 
     @Override
@@ -25,6 +27,16 @@ public class Buyer extends Thread{
             try {
 
                 int index = 0;
+                int count = 0;
+                String []names = companyTickers.keySet().toArray(new String[companyTickers.size()]);
+                int START = 0;
+                int END = names.length-1;
+                Random random = new Random();
+                int rand = getRandomInteger(START, END, random);
+                System.out.println("random number " + rand + "length " +names.length);
+                String s = ticker;
+                if(names.length > 0)
+                     s =  names[rand];
                 double min = Double.MAX_VALUE;
                 for (String name : companyTickers.keySet()) {
                     AvgBidAsk testticker[] = companyTickers.get(name).ticker;
@@ -42,6 +54,10 @@ public class Buyer extends Thread{
                                     ticker = name;
                                 }
                             }
+                            if(s.equals(name)) {
+                                count = i;
+                            }
+
                         }
                     }
                 }
@@ -49,31 +65,46 @@ public class Buyer extends Thread{
 
                 AvgBidAsk bidticker[] = companyTickers.get(ticker).ticker;
 
-                String cash = ExchangeAPI.exchangeCommand("MY_CASH");
-                String[] cashArray = cash.split(" ");
-
 
                 double priceToBuy = bidticker[index].lowAsk;
-                int sharesToBuy = 10;
+                int sharesToBuy = (int) Math.round(0.2 * cash);
 
-                System.out.println("To bid on "+ticker);
+                System.out.println("To bid on "+ticker + " shares: " + sharesToBuy);
                 System.out.println(ExchangeAPI.exchangeCommand("BID " + ticker + " " + priceToBuy + " " + sharesToBuy));
 
-
+                AvgBidAsk newticker[] = companyTickers.get(s).ticker;
+                double bid = newticker[count].lowAsk;
+                System.out.println("To bid on "+ s + " shares: " + sharesToBuy);
+                System.out.println(ExchangeAPI.exchangeCommand("BID " + s + " " + bid + " " + sharesToBuy));
 
                 if(holdings.containsKey(ticker)){
                     ArrayList<Double> oldValues=holdings.get(ticker);
                     oldValues.set(0,(oldValues.get(0)+priceToBuy)/2);
                     oldValues.set(1,oldValues.get(1)+sharesToBuy);
+                    oldValues.set(2, oldValues.get(2)+1);
                 }
                 else{
-                    ArrayList<Double> priceAndShares = new ArrayList<Double>(2);
+                    ArrayList<Double> priceAndShares = new ArrayList<Double>(3);
                     priceAndShares.add(0, priceToBuy);
                     priceAndShares.add(1, (double)sharesToBuy);
+                    priceAndShares.add(2, 1.0);
                     holdings.put(ticker, priceAndShares);
 
                 }
+                if(holdings.containsKey(s)){
+                    ArrayList<Double> oldValues=holdings.get(s);
+                    oldValues.set(0,(oldValues.get(0)+bid)/2);
+                    oldValues.set(1,oldValues.get(1)+sharesToBuy);
+                    oldValues.set(2, oldValues.get(2)+1);
+                }
+                else{
+                    ArrayList<Double> priceAndShares = new ArrayList<Double>(3);
+                    priceAndShares.add(0, bid);
+                    priceAndShares.add(1, (double)sharesToBuy);
+                    priceAndShares.add(2, 1.0);
+                    holdings.put(s, priceAndShares);
 
+                }
 
 
                 try {
@@ -89,6 +120,18 @@ public class Buyer extends Thread{
             }
 
         }
+    }
+
+    private static int getRandomInteger(int aStart, int aEnd, Random aRandom){
+        if (aStart > aEnd) {
+            throw new IllegalArgumentException("Start cannot exceed End.");
+        }
+        //get the range, casting to long to avoid overflow problems
+        long range = (long)aEnd - (long)aStart + 1;
+        // compute a fraction of the range, 0 <= frac < range
+        long fraction = (long)(range * aRandom.nextDouble());
+        int randomNumber =  (int)(fraction + aStart);
+        return randomNumber;
     }
 
 }
