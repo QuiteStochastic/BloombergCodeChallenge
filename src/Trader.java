@@ -73,64 +73,11 @@ public class Trader {
             e.printStackTrace();
         }
 
-        while (true) {
-            String ticker = "AAPL";
+        Buyer buyer=new Buyer(holdings,companyTickers);
+        buyer.start();
 
-
-            try {
-
-                int index = 0;
-                double min = Double.MAX_VALUE;
-                for (String name : companyTickers.keySet()) {
-                    AvgBidAsk testticker[] = companyTickers.get(name).ticker;
-                    for (int i = 0; i < testticker.length; i++) {
-                        if (testticker[i] != null) {
-                            double difference = testticker[i].avgAsk - testticker[i].avgBid;
-                            if (difference < min) {
-                                min = difference;
-                                index = i;
-                                ticker = name;
-                            }
-                        }
-                    }
-                }
-
-
-                AvgBidAsk bidticker[] = companyTickers.get(ticker).ticker;
-
-                String cash = ExchangeAPI.exchangeCommand("MY_CASH");
-                String[] cashArray = cash.split(" ");
-
-
-                double priceToBuy = bidticker[index].lowAsk;
-                int sharesToBuy = 10;
-
-                System.out.println("To bid on "+ticker);
-                System.out.println(ExchangeAPI.exchangeCommand("BID " + ticker + " " + priceToBuy + " " + sharesToBuy));
-                ArrayList<Double> priceAndShares = new ArrayList<Double>(2);
-                priceAndShares.add(0, priceToBuy);
-                priceAndShares.add(1, (double)sharesToBuy);
-
-
-
-                holdings.put(ticker, priceAndShares);
-
-
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-
-            }
-            catch (IOException e) {
-                System.out.println("trading: exited for company: " + ticker);
-                System.exit(-1);
-                return;
-            }
-
-        }
+        Seller seller=new Seller(holdings,companyTickers);
+        seller.start();
 
     }
 }
