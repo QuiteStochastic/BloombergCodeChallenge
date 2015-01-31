@@ -9,24 +9,23 @@ import java.util.HashMap;
 public class Trader {
 
     //price, shares
-    static HashMap<String,ArrayList<Double>> holdings=new HashMap<String, ArrayList<Double>>();
+    static HashMap<String, ArrayList<Double>> holdings = new HashMap<String, ArrayList<Double>>();
 
-    static ArrayList<String>allCompanyTickerNames = new ArrayList<String>();
-    static{
+    static ArrayList<String> allCompanyTickerNames = new ArrayList<String>();
+
+    static {
 
         String info = "";
-        try
-        {
+        try {
             info = ExchangeAPI.exchangeCommand("SECURITIES");
-        } catch (IOException e)
-        {
-            // TODO Auto-generated catch block
+        } catch (IOException e) {
+
+
             e.printStackTrace();
         }
-        
+
         String[] infoArray = info.split(" ");
-        for (int i = 1; i < infoArray.length; i += 4)
-        {
+        for (int i = 1; i < infoArray.length; i += 4) {
             allCompanyTickerNames.add(infoArray[i]);
         }
         
@@ -58,74 +57,81 @@ public class Trader {
 
     }
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
 
 
-        HashMap<String,Ticker> companyTickers = new HashMap<String, Ticker>();
-        for(String s: allCompanyTickerNames){
-            companyTickers.put(s,new Ticker(s));
+        HashMap<String, Ticker> companyTickers = new HashMap<String, Ticker>();
+        for (String s : allCompanyTickerNames) {
+            companyTickers.put(s, new Ticker(s));
             companyTickers.get(s).start();
         }
 
 
-        try
-        {
+        try {
             Thread.sleep(1000);
-        }
-        catch (InterruptedException e){
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
-        while(true){
-
-
+        while (true) {
             String ticker = "AAPL";
-            int index = 0;
-            double min = Double.MAX_VALUE;
-            for (String name: companyTickers.keySet() ) {
-                AvgBidAsk testticker[]=companyTickers.get(name).ticker;
-                for(int i=0;i<testticker.length;i++){
-                    if(testticker[i] != null) {
-                        double difference = testticker[i].avgAsk - testticker[i].avgBid;
-                        if (difference < min) {
-                            min = difference;
-                            index = i;
-                            ticker = name;
+
+
+            try {
+
+                int index = 0;
+                double min = Double.MAX_VALUE;
+                for (String name : companyTickers.keySet()) {
+                    AvgBidAsk testticker[] = companyTickers.get(name).ticker;
+                    for (int i = 0; i < testticker.length; i++) {
+                        if (testticker[i] != null) {
+                            double difference = testticker[i].avgAsk - testticker[i].avgBid;
+                            if (difference < min) {
+                                min = difference;
+                                index = i;
+                                ticker = name;
+                            }
                         }
                     }
-//                System.out.print(testticker[i]+" ");
                 }
-            }
 
 
-            AvgBidAsk bidticker[]=companyTickers.get(ticker).ticker;
-            try {
+                AvgBidAsk bidticker[] = companyTickers.get(ticker).ticker;
+
                 String cash = ExchangeAPI.exchangeCommand("MY_CASH");
                 String[] cashArray = cash.split(" ");
-                double sharesToBuy=10;
-                double priceToBuy=bidticker[index].avgAsk;
-                System.out.println(ExchangeAPI.exchangeCommand("BID "+ ticker + " " + priceToBuy + " " + sharesToBuy) );
-                ArrayList<Double> priceAndShares=new ArrayList<Double>(2);
-                priceAndShares.add(0,priceToBuy);
-                priceAndShares.add(1,sharesToBuy);
 
-                holdings.put(ticker,priceAndShares);
 
-            } catch (IOException e) {
-                System.out.println("trading: exited for company: "+ ticker);
+                double priceToBuy = bidticker[index].lowAsk;
+                int sharesToBuy = 10;
+
+                System.out.println("To bid on "+ticker);
+                System.out.println(ExchangeAPI.exchangeCommand("BID " + ticker + " " + priceToBuy + " " + sharesToBuy));
+                ArrayList<Double> priceAndShares = new ArrayList<Double>(2);
+                priceAndShares.add(0, priceToBuy);
+                priceAndShares.add(1, (double)sharesToBuy);
+
+
+
+                holdings.put(ticker, priceAndShares);
+
+
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+
+            }
+            catch (IOException e) {
+                System.out.println("trading: exited for company: " + ticker);
                 System.exit(-1);
                 return;
-            }
-
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
             }
 
         }
 
     }
-
 }
 
