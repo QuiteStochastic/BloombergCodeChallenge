@@ -6,7 +6,7 @@ public class Ticker extends Thread{
     final String companyName;
     AvgBidAsk ticker[];
 
-    long queryTimeGap =2000;
+    long queryTimeGap =10000;
 
 
     public Ticker(String company){
@@ -30,7 +30,7 @@ public class Ticker extends Thread{
                 System.exit(-1);
                 return;
             }
-            System.out.println("INFO, ticker: "+companyName+": "+info);
+//            System.out.println("INFO, ticker: "+companyName+": "+info);
 
             String[] infoArray = info.split(" ");
             double bidAvg = 0;

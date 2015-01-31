@@ -75,19 +75,49 @@ public class Trader {
         }
 
 
+        try
+        {
+            Thread.sleep(20000);
+        }
+        catch (InterruptedException e){
+            e.printStackTrace();
+        }
+
         while(true){
 
-            AvgBidAsk testticker[]=companyTickers.get("AAPL").ticker;
 
-            for(int i=0;i<testticker.length;i++){
-
-                System.out.print(testticker[i]+" ");
+            String ticker = "AAPL";
+            int index = 0;
+            double min = Double.MAX_VALUE;
+            for (String name: companyTickers.keySet() ) {
+                AvgBidAsk testticker[]=companyTickers.get(name).ticker;
+                for(int i=0;i<testticker.length;i++){
+                    if(testticker[i] != null) {
+                        double difference = testticker[i].avgAsk - testticker[i].avgBid;
+                        if (difference < min) {
+                            min = difference;
+                            index = i;
+                            ticker = name;
+                        }
+                    }
+//                System.out.print(testticker[i]+" ");
+                }
             }
 
-            System.out.println("\n\n");
+
+            AvgBidAsk bidticker[]=companyTickers.get(ticker).ticker;
+            try {
+                String cash = ExchangeAPI.exchangeCommand("MY_CASH");
+                String[] cashArray = cash.split(" ");
+                System.out.println(ExchangeAPI.exchangeCommand("BID "+ ticker + " " + bidticker[index].avgAsk + " " + 10) );
+            } catch (IOException e) {
+                System.out.println("trading: exited for company: "+ ticker);
+                System.exit(-1);
+                return;
+            }
 
             try {
-                Thread.sleep(1000);
+                Thread.sleep(2000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
