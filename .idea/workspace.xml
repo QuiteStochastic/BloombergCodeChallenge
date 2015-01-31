@@ -385,7 +385,13 @@
       <option name="project" value="LOCAL" />
       <updated>1422676582647</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="trying to make avgbidask to work, but it's printing nulls">
+      <created>1422680422117</created>
+      <option name="number" value="00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1422680422117</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -434,7 +440,8 @@
       <TodoPanelSettings />
     </option>
     <MESSAGE value="&quot;exchange api is there&quot;" />
-    <option name="LAST_COMMIT_MESSAGE" value="&quot;exchange api is there&quot;" />
+    <MESSAGE value="trying to make avgbidask to work, but it's printing nulls" />
+    <option name="LAST_COMMIT_MESSAGE" value="trying to make avgbidask to work, but it's printing nulls" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
