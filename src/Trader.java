@@ -8,6 +8,8 @@ import java.util.HashMap;
 
 public class Trader {
 
+    //price, shares
+    static HashMap<String,ArrayList<Double>> holdings=new HashMap<String, ArrayList<Double>>();
 
     static ArrayList<String>allCompanyTickerNames = new ArrayList<String>();
     static{
@@ -59,15 +61,6 @@ public class Trader {
     public static void main(String[] args){
 
 
-
-        /*        String info;
-        try{
-            info=ExchangeAPI.exchangeCommand("SECURITIES");
-        }
-        catch (IOException e){
-            System.exit(-1);
-        }*/
-
         HashMap<String,Ticker> companyTickers = new HashMap<String, Ticker>();
         for(String s: allCompanyTickerNames){
             companyTickers.put(s,new Ticker(s));
@@ -77,7 +70,7 @@ public class Trader {
 
         try
         {
-            Thread.sleep(20000);
+            Thread.sleep(1000);
         }
         catch (InterruptedException e){
             e.printStackTrace();
@@ -109,7 +102,15 @@ public class Trader {
             try {
                 String cash = ExchangeAPI.exchangeCommand("MY_CASH");
                 String[] cashArray = cash.split(" ");
-                System.out.println(ExchangeAPI.exchangeCommand("BID "+ ticker + " " + bidticker[index].avgAsk + " " + 10) );
+                double sharesToBuy=10;
+                double priceToBuy=bidticker[index].avgAsk;
+                System.out.println(ExchangeAPI.exchangeCommand("BID "+ ticker + " " + priceToBuy + " " + sharesToBuy) );
+                ArrayList<Double> priceAndShares=new ArrayList<Double>(2);
+                priceAndShares.add(0,priceToBuy);
+                priceAndShares.add(1,sharesToBuy);
+
+                holdings.put(ticker,priceAndShares);
+
             } catch (IOException e) {
                 System.out.println("trading: exited for company: "+ ticker);
                 System.exit(-1);
