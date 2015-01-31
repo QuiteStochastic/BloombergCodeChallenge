@@ -6,6 +6,8 @@ public class Ticker extends Thread{
     final String companyName;
     AvgBidAsk ticker[];
 
+    long queryGap=50;
+
 
     public Ticker(String company){
 
@@ -24,8 +26,8 @@ public class Ticker extends Thread{
             try {
                 info = ExchangeAPI.exchangeCommand("ORDERS "+companyName);
             } catch (IOException e) {
-                System.exit(-1);
                 System.out.println("ticker thread exited for company: "+ companyName);
+                System.exit(-1);
                 return;
             }
 
@@ -34,7 +36,7 @@ public class Ticker extends Thread{
             double bidTotalShares = 0;
             double askAvg = 0;
             double askTotalShares = 0;
- System.out.println(info);
+            System.out.println(info);
             for (int i = 1; i < infoArray.length; i += 4) {
                 if (infoArray[i].equals("BID")) {
                     bidAvg = bidAvg + Double.parseDouble(infoArray[i + 2]) * Double.parseDouble(infoArray[i + 3]);
@@ -60,7 +62,7 @@ public class Ticker extends Thread{
 
             try
             {
-                Thread.sleep(50);
+                Thread.sleep(queryGap);
             }
             catch (InterruptedException e){
                 continue;

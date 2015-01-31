@@ -27,9 +27,11 @@ public class ExchangeAPI {
         pout.println("CLOSE_CONNECTION");
         pout.flush();
         String line = "";
-    while ((line = bin.readLine()) != null) {
-//        System.out.println(line);
-    }
+        String temp;
+        while ((temp = bin.readLine()) != null) {
+            System.out.println(line);
+            line=line+temp;
+        }
         pout.close();
         bin.close();
 
