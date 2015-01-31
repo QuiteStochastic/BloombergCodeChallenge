@@ -77,39 +77,50 @@ public class Trader {
 
         try
         {
-            Thread.sleep(20000);
+            Thread.sleep(1000);
         }
         catch (InterruptedException e){
             e.printStackTrace();
         }
 
         while(true){
-
-
             String ticker = "AAPL";
-            int index = 0;
-            double min = Double.MAX_VALUE;
-            for (String name: companyTickers.keySet() ) {
-                AvgBidAsk testticker[]=companyTickers.get(name).ticker;
-                for(int i=0;i<testticker.length;i++){
-                    if(testticker[i] != null) {
-                        double difference = testticker[i].avgAsk - testticker[i].avgBid;
-                        if (difference < min) {
-                            min = difference;
-                            index = i;
-                            ticker = name;
-                        }
-                    }
-//                System.out.print(testticker[i]+" ");
-                }
-            }
 
 
-            AvgBidAsk bidticker[]=companyTickers.get(ticker).ticker;
             try {
+
+                int index = 0;
+                double min = Double.MAX_VALUE;
+                for (String name: companyTickers.keySet() ) {
+                    AvgBidAsk testticker[]=companyTickers.get(name).ticker;
+                    for(int i=0;i<testticker.length;i++){
+                        if(testticker[i] != null) {
+                            double difference = testticker[i].avgAsk - testticker[i].avgBid;
+                            if (difference < min) {
+                                min = difference;
+                                index = i;
+                                ticker = name;
+                            }
+                        }
+//                System.out.print(testticker[i]+" ");
+                    }
+                }
+
+
+                AvgBidAsk bidticker[]=companyTickers.get(ticker).ticker;
+
                 String cash = ExchangeAPI.exchangeCommand("MY_CASH");
                 String[] cashArray = cash.split(" ");
-                System.out.println(ExchangeAPI.exchangeCommand("BID "+ ticker + " " + bidticker[index].avgAsk + " " + 10) );
+                System.out.println(ticker +
+                        ExchangeAPI.exchangeCommand("BID "+ ticker + " " + bidticker[index].lowAsk + " " + 10) );
+
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+//                if(avgBid)
             } catch (IOException e) {
                 System.out.println("trading: exited for company: "+ ticker);
                 System.exit(-1);
@@ -117,7 +128,7 @@ public class Trader {
             }
 
             try {
-                Thread.sleep(2000);
+                Thread.sleep(1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

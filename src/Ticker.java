@@ -6,7 +6,7 @@ public class Ticker extends Thread{
     final String companyName;
     AvgBidAsk ticker[];
 
-    long queryTimeGap =10000;
+    long queryTimeGap =500;
 
 
     public Ticker(String company){
@@ -41,7 +41,7 @@ public class Ticker extends Thread{
             if(!infoArray[0].equals("SECURITY_ORDERS_OUT")){
                 continue;
             }
-
+            double minAsk = Double.MIN_VALUE;
             for (int i = 1; i < infoArray.length; i += 4) {
                 if (infoArray[i].equals("BID")) {
                     bidAvg = bidAvg + Double.parseDouble(infoArray[i + 2]) * Double.parseDouble(infoArray[i + 3]);
@@ -49,14 +49,17 @@ public class Ticker extends Thread{
                 } else if (infoArray[i].equals("ASK")) {
                     askAvg = askAvg + Double.parseDouble(infoArray[i + 2]) * Double.parseDouble(infoArray[i + 3]);
                     askTotalShares = askTotalShares + Double.parseDouble(infoArray[i + 3]);
-
+                    if(Double.parseDouble(infoArray[i + 2]) < minAsk)
+                        minAsk = Double.parseDouble(infoArray[i + 2]);
                 }
             }
+            if(askAvg < minAsk)
+                minAsk = askAvg;
 
             bidAvg = bidAvg / bidTotalShares;
             askAvg = askAvg / askTotalShares;
 
-            ticker[arrayIndexCounter] = new AvgBidAsk(bidAvg, askAvg,bidTotalShares, askTotalShares);
+            ticker[arrayIndexCounter] = new AvgBidAsk(bidAvg, askAvg,bidTotalShares, askTotalShares, minAsk);
 
             if(arrayIndexCounter>=tickerBufferSize-1){
                 arrayIndexCounter=0;
