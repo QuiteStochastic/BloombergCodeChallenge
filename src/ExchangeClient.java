@@ -4,6 +4,22 @@
  * and open the template in the editor.
  */
 
+
+/*
+
+aapl
+atvi
+ea
+fb
+goog
+msft
+sbux
+sny
+tsla
+twtr
+
+ */
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
