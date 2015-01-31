@@ -56,7 +56,7 @@ public class Ticker extends Thread{
             bidAvg = bidAvg / bidTotalShares;
             askAvg = askAvg / askTotalShares;
 
-            ticker[arrayIndexCounter] = new AvgBidAsk(bidAvg, askAvg);
+            ticker[arrayIndexCounter] = new AvgBidAsk(bidAvg, askAvg,bidTotalShares, askTotalShares);
 
             if(arrayIndexCounter>=tickerBufferSize-1){
                 arrayIndexCounter=0;
