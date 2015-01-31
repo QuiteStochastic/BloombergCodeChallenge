@@ -74,7 +74,8 @@ public class Seller extends Thread{
                                 secondName = ticker;
                                 longAskPrice = testticker[i].highBid;
                             }
-                            if(s.equals(ticker)) {
+                            if(s.equals(ticker) || testticker[i].highBid >= priceAndShare.get(1)) {
+                                s = ticker;
                                 count = i;
                             }
                         }
@@ -101,10 +102,10 @@ public class Seller extends Thread{
                 ArrayList<Double> priceAndShare = holdings.get(s);
                 double ask = newticker[count].highBid;
 //                ask += .01*ask;
-                if(ask > priceAndShare.get(1)) {
+//                if(ask >= priceAndShare.get(1)) {
                     System.out.println("To bid on " + s + " shares: " + shares);
                     System.out.println(ExchangeAPI.exchangeCommand("ASK " + s + " " + ask + " " + shares));
-                }
+//                }
 
             }
             catch (IOException e) {
