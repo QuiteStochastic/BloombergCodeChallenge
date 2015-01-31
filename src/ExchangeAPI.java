@@ -29,7 +29,7 @@ public class ExchangeAPI {
         String line = "";
         String temp;
         while ((temp = bin.readLine()) != null) {
-            System.out.println(line);
+            //System.out.println(line);
             line=line+temp;
         }
         pout.close();

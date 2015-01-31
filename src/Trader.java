@@ -1,12 +1,12 @@
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.DoubleSummaryStatistics;
+import java.util.HashMap;
 
 public class Trader {
 
 
-    static ArrayList<String> allCompanyTickerNames=new ArrayList<String>();
-    {
+    static ArrayList<String>allCompanyTickerNames;
+    static {
+        allCompanyTickerNames=new ArrayList<String>();
         allCompanyTickerNames.add("AAPL");
         allCompanyTickerNames.add("ATVI");
         allCompanyTickerNames.add("EA");
@@ -17,6 +17,21 @@ public class Trader {
         allCompanyTickerNames.add("SNY");
         allCompanyTickerNames.add("TSLA");
         allCompanyTickerNames.add("TWTR");
+
+        /*
+
+aapl
+atvi
+ea
+fb
+goog
+msft
+sbux
+sny
+tsla
+twtr
+
+ */
 
 
     }
@@ -33,16 +48,20 @@ public class Trader {
             System.exit(-1);
         }*/
 
-
-        Ticker aaplTicker=new Ticker("AAPL");
-        aaplTicker.start();
+        HashMap<String,Ticker> companyTickers = new HashMap<String, Ticker>();
+        for(String s: allCompanyTickerNames){
+            companyTickers.put(s,new Ticker(s));
+            companyTickers.get(s).start();
+        }
 
 
         while(true){
 
-            for(int i=0;i<aaplTicker.ticker.length;i++){
+            AvgBidAsk testticker[]=companyTickers.get("AAPL").ticker;
 
-                System.out.print(aaplTicker.ticker[i]+" ");
+            for(int i=0;i<testticker.length;i++){
+
+                System.out.print(testticker[i]+" ");
             }
 
             System.out.println("\n\n");
