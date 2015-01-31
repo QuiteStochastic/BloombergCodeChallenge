@@ -2,11 +2,11 @@ import java.io.IOException;
 
 public class Ticker extends Thread{
 
-    final int tickerBufferSize=1024;
+    final int tickerBufferSize=64;
     final String companyName;
     AvgBidAsk ticker[];
 
-    long queryTimeGap =2000;
+    long queryTimeGap =500;
 
 
     public Ticker(String company){

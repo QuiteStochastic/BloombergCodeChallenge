@@ -18,6 +18,7 @@ public class Trader {
         String info = "";
         try {
             info = ExchangeAPI.exchangeCommand("SECURITIES");
+
         } catch (IOException e) {
 
 
@@ -73,7 +74,7 @@ public class Trader {
 
 
             try {
-                Thread.sleep(1000);
+                Thread.sleep(500);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

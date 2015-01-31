@@ -21,7 +21,7 @@ public class Seller extends Thread{
     @Override
     public void run(){
         try {
-            Thread.sleep(1000);
+            Thread.sleep(500);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -34,7 +34,7 @@ public class Seller extends Thread{
 
             try {
                 try {
-                    Thread.sleep(1000);
+                    Thread.sleep(500);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -74,7 +74,7 @@ public class Seller extends Thread{
                                 secondName = ticker;
                                 longAskPrice = testticker[i].highBid;
                             }
-                            if(s.equals(ticker) || testticker[i].highBid >= priceAndShare.get(1)) {
+                            if(s.equals(ticker)) {
                                 s = ticker;
                                 count = i;
                             }
